@@ -68,7 +68,16 @@ class DockerStackComposeIntegrationSpec extends Specification {
                         Type: 'volume',
                         Source: namespace + '_shm',
                         Target: '/dev/shm',
-                        VolumeOptions: [Labels: ['com.docker.stack.namespace': namespace]]
+                        VolumeOptions: [
+                                Labels: ['com.docker.stack.namespace': namespace],
+                                DriverConfig: [
+                                        Options: [
+                                                device: "tmpfs",
+                                                o: "size=128m",
+                                                type: "tmpfs"
+                                        ]
+                                ]
+                        ]
                 ]
         ]
 

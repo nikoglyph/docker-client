@@ -492,7 +492,9 @@ class DeployConfigReader {
                     noCopy: volumeSpec.volume?.noCopy ?: false,
             ]
 
-            if (stackVolume?.driver && stackVolume?.driver != "") {
+            // cli docker stack deploy accepts driverOpts without specified driver
+            // (in which case the engine defaults to the built-in 'local' driver)
+            if ((stackVolume?.driver && stackVolume?.driver != "") || stackVolume?.driverOpts) {
                 volumeOptions.driverConfig = [
                         name   : stackVolume.driver,
                         options: stackVolume.driverOpts.options
