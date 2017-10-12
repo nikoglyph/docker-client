@@ -89,7 +89,8 @@ class DockerClientImplIntegrationSpec extends Specification {
         officialRegistry.Official == true
         officialRegistry.Secure == true
 
-        info.RegistryConfig.InsecureRegistryCIDRs == ["127.0.0.0/8"]
+        info.RegistryConfig.InsecureRegistryCIDRs.each { str -> assertCIDR(str) }
+
         info.SystemTime =~ "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2,}.(\\d{3,}Z)?"
     }
 
@@ -120,5 +121,10 @@ class DockerClientImplIntegrationSpec extends Specification {
 
         then:
         authDetails.username == null || authResult.status.code == 200
+    }
+
+    private def assertCIDR(String actual) {
+        // CIDR or FQDN
+        assert actual =~ "(^\\d{1,3}(.\\d{1,3}){3}/\\d{1,2}\$)|(?=^.{1,254}\$)(^(?:(?!\\d+\\.|-)[a-zA-Z0-9_\\-]{1,63}(?<!-)\\.?)+(?:[a-zA-Z]{2,})\$)"
     }
 }
